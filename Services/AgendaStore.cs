@@ -17,20 +17,13 @@ public sealed class AgendaStore
     public async Task<IReadOnlyList<AgendaItem>> GetAllAsync()
     {
         await gate.WaitAsync();
-        try
-        {
-            return await ReadAsync();
-        }
-        finally
-        {
-            gate.Release();
-        }
+        try { return await ReadAsync(); }
+        finally { gate.Release(); }
     }
 
     public async Task<AgendaItem?> GetAsync(int id)
     {
-        var items = await GetAllAsync();
-        return items.FirstOrDefault(item => item.Id == id);
+        return (await GetAllAsync()).FirstOrDefault(item => item.Id == id);
     }
 
     public async Task<AgendaItem> CreateAsync(AgendaItemRequest request)
@@ -50,10 +43,7 @@ public sealed class AgendaStore
             await WriteAsync(items);
             return item;
         }
-        finally
-        {
-            gate.Release();
-        }
+        finally { gate.Release(); }
     }
 
     public async Task<AgendaItem?> UpdateAsync(int id, AgendaItemRequest request)
@@ -64,17 +54,13 @@ public sealed class AgendaStore
             var items = await ReadAsync();
             var item = items.FirstOrDefault(existing => existing.Id == id);
             if (item is null) return null;
-
             item.Descricao = request.Descricao.Trim();
             item.Data = request.Data;
             item.Valor = request.Valor;
             await WriteAsync(items);
             return item;
         }
-        finally
-        {
-            gate.Release();
-        }
+        finally { gate.Release(); }
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -87,10 +73,7 @@ public sealed class AgendaStore
             if (removed) await WriteAsync(items);
             return removed;
         }
-        finally
-        {
-            gate.Release();
-        }
+        finally { gate.Release(); }
     }
 
     private async Task<List<AgendaItem>> ReadAsync()

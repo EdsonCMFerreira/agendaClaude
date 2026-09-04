@@ -1,6 +1,6 @@
 # agendaClaude
 
-Agenda web em ASP.NET Core com CRUD de compromissos.
+Agenda web em ASP.NET Core com CRUD de compromissos usando um arquivo JSON local.
 
 ## Campos
 
