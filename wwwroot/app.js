@@ -4,7 +4,7 @@ const rows = document.querySelector('#agendaRows');
 const emptyState = document.querySelector('#emptyState');
 const searchInput = document.querySelector('#searchInput');
 const itemId = document.querySelector('#itemId');
-const nameInput = document.querySelector('#nameInput');
+const descriptionInput = document.querySelector('#descriptionInput');
 const dateInput = document.querySelector('#dateInput');
 const valueInput = document.querySelector('#valueInput');
 const formTitle = document.querySelector('#formTitle');
@@ -35,8 +35,8 @@ async function loadItems() {
 
 function render() {
   const query = searchInput.value.trim().toLocaleLowerCase();
-  const filtered = items.filter(item => item.nome.toLocaleLowerCase().includes(query)).sort((a, b) => newestFirst ? new Date(b.data) - new Date(a.data) : new Date(a.data) - new Date(b.data));
-  rows.innerHTML = filtered.map(item => `<tr><td><strong>${escapeHtml(item.nome)}</strong></td><td>${date.format(new Date(item.data))}</td><td>${money.format(item.valor)}</td><td><div class="actions"><button class="action" data-edit="${item.id}">Editar</button><button class="action delete" data-delete="${item.id}">Excluir</button></div></td></tr>`).join('');
+  const filtered = items.filter(item => item.descricao.toLocaleLowerCase().includes(query)).sort((a, b) => newestFirst ? new Date(b.data) - new Date(a.data) : new Date(a.data) - new Date(b.data));
+  rows.innerHTML = filtered.map(item => `<tr><td><strong>${escapeHtml(item.descricao)}</strong></td><td>${date.format(new Date(item.data))}</td><td>${money.format(item.valor)}</td><td><div class="actions"><button class="action" data-edit="${item.id}">Editar</button><button class="action delete" data-delete="${item.id}">Excluir</button></div></td></tr>`).join('');
   emptyState.classList.toggle('visible', filtered.length === 0);
   document.querySelector('#totalCount').textContent = items.length;
   document.querySelector('#totalValue').textContent = money.format(items.reduce((sum, item) => sum + item.valor, 0));
@@ -49,13 +49,13 @@ function render() {
 function openForm(id) {
   const item = items.find(entry => entry.id === id);
   itemId.value = item?.id ?? '';
-  nameInput.value = item?.nome ?? '';
+  descriptionInput.value = item?.descricao ?? '';
   dateInput.value = item ? item.data.slice(0, 10) : new Date().toISOString().slice(0, 10);
   valueInput.value = item?.valor ?? '';
   formTitle.textContent = item ? 'Editar compromisso' : 'Novo compromisso';
   formError.textContent = '';
   formPanel.classList.add('open');
-  nameInput.focus();
+  descriptionInput.focus();
 }
 
 function closeForm() { formPanel.classList.remove('open'); form.reset(); itemId.value = ''; formError.textContent = ''; }
@@ -63,7 +63,7 @@ function closeForm() { formPanel.classList.remove('open'); form.reset(); itemId.
 async function saveItem(event) {
   event.preventDefault();
   const id = itemId.value;
-  const payload = { nome: nameInput.value.trim(), data: dateInput.value, valor: Number(valueInput.value) };
+  const payload = { descricao: descriptionInput.value.trim(), data: dateInput.value, valor: Number(valueInput.value) };
   const response = await fetch(id ? `/api/agenda/${id}` : '/api/agenda', { method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
   if (!response.ok) { formError.textContent = 'Confira os dados informados.'; return; }
   await loadItems();
@@ -73,7 +73,7 @@ async function saveItem(event) {
 
 async function deleteItem(id) {
   const item = items.find(entry => entry.id === id);
-  if (!item || !confirm(`Excluir “${item.nome}”?`)) return;
+  if (!item || !confirm(`Excluir “${item.descricao}”?`)) return;
   const response = await fetch(`/api/agenda/${id}`, { method: 'DELETE' });
   if (response.ok) { await loadItems(); showToast('Compromisso excluído.'); }
 }

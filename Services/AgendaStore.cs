@@ -42,7 +42,7 @@ public sealed class AgendaStore
             var item = new AgendaItem
             {
                 Id = items.Count == 0 ? 1 : items.Max(existing => existing.Id) + 1,
-                Nome = request.Nome.Trim(),
+                Descricao = request.Descricao.Trim(),
                 Data = request.Data,
                 Valor = request.Valor
             };
@@ -65,7 +65,7 @@ public sealed class AgendaStore
             var item = items.FirstOrDefault(existing => existing.Id == id);
             if (item is null) return null;
 
-            item.Nome = request.Nome.Trim();
+            item.Descricao = request.Descricao.Trim();
             item.Data = request.Data;
             item.Valor = request.Valor;
             await WriteAsync(items);
@@ -97,7 +97,14 @@ public sealed class AgendaStore
     {
         if (!File.Exists(filePath)) return [];
         await using var stream = File.OpenRead(filePath);
-        return await JsonSerializer.DeserializeAsync<List<AgendaItem>>(stream, options) ?? [];
+        var storedItems = await JsonSerializer.DeserializeAsync<List<AgendaItemStorage>>(stream, options) ?? [];
+        return storedItems.Select(item => new AgendaItem
+        {
+            Id = item.Id,
+            Descricao = item.Descricao ?? item.Nome ?? string.Empty,
+            Data = item.Data,
+            Valor = item.Valor
+        }).ToList();
     }
 
     private async Task WriteAsync(List<AgendaItem> items)
@@ -105,5 +112,14 @@ public sealed class AgendaStore
         Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
         await using var stream = File.Create(filePath);
         await JsonSerializer.SerializeAsync(stream, items, options);
+    }
+
+    private sealed class AgendaItemStorage
+    {
+        public int Id { get; set; }
+        public string? Descricao { get; set; }
+        public string? Nome { get; set; }
+        public DateTime Data { get; set; }
+        public decimal Valor { get; set; }
     }
 }

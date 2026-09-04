@@ -4,7 +4,7 @@ Agenda web em ASP.NET Core com CRUD de compromissos.
 
 ## Campos
 
-- Nome
+- Descrição
 - Data
 - Valor
 

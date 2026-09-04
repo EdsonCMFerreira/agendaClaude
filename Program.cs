@@ -18,8 +18,8 @@ app.MapGet("/api/agenda/{id:int}", async (int id, AgendaStore store) =>
 
 app.MapPost("/api/agenda", async (AgendaItemRequest request, AgendaStore store) =>
 {
-	if (string.IsNullOrWhiteSpace(request.Nome) || request.Data == default || request.Valor < 0)
-		return Results.BadRequest(new { message = "Informe nome, data e um valor válido." });
+	if (string.IsNullOrWhiteSpace(request.Descricao) || request.Data == default || request.Valor < 0)
+		return Results.BadRequest(new { message = "Informe descrição, data e um valor válido." });
 
 	var item = await store.CreateAsync(request);
 	return Results.Created($"/api/agenda/{item.Id}", item);
@@ -27,8 +27,8 @@ app.MapPost("/api/agenda", async (AgendaItemRequest request, AgendaStore store) 
 
 app.MapPut("/api/agenda/{id:int}", async (int id, AgendaItemRequest request, AgendaStore store) =>
 {
-	if (string.IsNullOrWhiteSpace(request.Nome) || request.Data == default || request.Valor < 0)
-		return Results.BadRequest(new { message = "Informe nome, data e um valor válido." });
+	if (string.IsNullOrWhiteSpace(request.Descricao) || request.Data == default || request.Valor < 0)
+		return Results.BadRequest(new { message = "Informe descrição, data e um valor válido." });
 
 	var item = await store.UpdateAsync(id, request);
 	return item is null ? Results.NotFound() : Results.Ok(item);
