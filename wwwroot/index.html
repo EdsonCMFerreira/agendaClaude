@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenda Claude</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">A</span><span>agenda<strong>Claude</strong></span></div>
+    <span class="date-label" id="todayLabel"></span>
+  </header>
+  <main class="page-shell">
+    <section class="intro">
+      <div><span class="kicker">PAINEL DE COMPROMISSOS</span><h1>Sua agenda,<br><em>em ordem.</em></h1></div>
+      <p>Registre compromissos e acompanhe os valores em um só lugar.</p>
+    </section>
+
+    <section class="stats" aria-label="Resumo da agenda">
+      <div class="stat"><span>Compromissos</span><strong id="totalCount">0</strong></div>
+      <div class="stat"><span>Valor total</span><strong id="totalValue">R$ 0,00</strong></div>
+      <div class="stat"><span>Próximo compromisso</span><strong id="nextDate">--</strong></div>
+    </section>
+
+    <section class="workspace">
+      <div class="agenda-section">
+        <div class="section-heading"><div><span class="kicker">VISÃO GERAL</span><h2>Compromissos</h2></div><button class="primary-button" id="newButton">+ Novo compromisso</button></div>
+        <div class="toolbar"><label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Buscar por nome..." autocomplete="off"></label><button class="sort-button" id="sortButton">Mais recentes <span>↕</span></button></div>
+        <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Data</th><th>Valor</th><th><span class="sr-only">Ações</span></th></tr></thead><tbody id="agendaRows"></tbody></table><div class="empty-state" id="emptyState"><span class="empty-icon">◌</span><strong>Nenhum compromisso encontrado</strong><span>Adicione seu primeiro compromisso para começar.</span></div></div>
+      </div>
+      <aside class="form-panel" id="formPanel"><div class="form-heading"><div><span class="kicker">REGISTRO</span><h2 id="formTitle">Novo compromisso</h2></div><button class="icon-button" id="closeButton" aria-label="Fechar formulário">×</button></div><form id="agendaForm"><input type="hidden" id="itemId"><label>Nome<input id="nameInput" type="text" placeholder="Ex.: Reunião com cliente" required maxlength="120"></label><label>Data<input id="dateInput" type="date" required></label><label>Valor<input id="valueInput" type="number" placeholder="0,00" min="0" step="0.01" required></label><p class="form-error" id="formError"></p><div class="form-actions"><button class="secondary-button" type="button" id="cancelButton">Cancelar</button><button class="primary-button" type="submit" id="saveButton">Salvar compromisso</button></div></form></aside>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
