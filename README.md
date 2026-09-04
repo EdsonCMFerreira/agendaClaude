@@ -2,7 +2,7 @@
 
 ## Descrição
 
-Sua Agenda.Net é uma aplicação web para organizar compromissos de forma simples e centralizada. Ela permite cadastrar, consultar, editar e excluir compromissos, acompanhando a descrição, a data e o valor de cada registro. A aplicação foi desenvolvida em ASP.NET Core e utiliza um arquivo JSON local para persistir os dados, sem necessidade de configurar um banco de dados.
+Sua Agenda.Net é uma aplicação web MVC para organizar compromissos de forma simples e centralizada. Ela permite cadastrar, consultar, editar e excluir compromissos, acompanhando a descrição, a data e o valor de cada registro. A aplicação foi desenvolvida em ASP.NET Core, usa Entity Framework Core e persiste os dados em SQL Server.
 
 ## Campos
 
@@ -18,4 +18,18 @@ dotnet run --urls http://localhost:5001
 
 Acesse `http://localhost:5001` no navegador.
 
-Os dados são persistidos em `data/agenda.json`.
+O banco `AgendaClaude` e a tabela `AgendaItems` são criados automaticamente pelo EF Core na inicialização.
+
+## API
+
+- `GET /api/agenda` lista os compromissos.
+- `GET /api/agenda/{id}` consulta um compromisso.
+- `POST /api/agenda` cria um compromisso.
+- `PUT /api/agenda/{id}` atualiza um compromisso.
+- `DELETE /api/agenda/{id}` exclui um compromisso.
+
+A conexão padrão usa a instância local `SQLEXPRESS`:
+
+```text
+Server=.\SQLEXPRESS;Database=AgendaClaude;Trusted_Connection=True;TrustServerCertificate=True;
+```
