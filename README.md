@@ -1,6 +1,8 @@
 # agendaClaude
 
-Agenda web em ASP.NET Core com CRUD de compromissos usando um arquivo JSON local.
+## Descrição
+
+Sua Agenda.Net é uma aplicação web para organizar compromissos de forma simples e centralizada. Ela permite cadastrar, consultar, editar e excluir compromissos, acompanhando a descrição, a data e o valor de cada registro. A aplicação foi desenvolvida em ASP.NET Core e utiliza um arquivo JSON local para persistir os dados, sem necessidade de configurar um banco de dados.
 
 ## Campos
 
