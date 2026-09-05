@@ -25,8 +25,15 @@ public sealed class AgendaController(AgendaDbContext db) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<AgendaItem>> Create(AgendaItemRequest request, CancellationToken cancellationToken)
     {
-        if (!IsValid(request)) return BadRequest(new { message = "Informe descrição, data e um valor válido." });
-        var item = new AgendaItem { Descricao = request.Descricao.Trim(), Data = request.Data, Valor = request.Valor };
+        if (!IsValid(request)) return BadRequest(new { message = "Informe contato, data, horário, telefone e um valor válido." });
+        var item = new AgendaItem
+        {
+            Contato = request.Contato.Trim(),
+            Data = request.Data,
+            Horario = request.Horario,
+            Telefone = request.Telefone.Trim(),
+            Valor = request.Valor
+        };
         db.AgendaItems.Add(item);
         await db.SaveChangesAsync(cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
@@ -35,11 +42,13 @@ public sealed class AgendaController(AgendaDbContext db) : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<ActionResult<AgendaItem>> Update(int id, AgendaItemRequest request, CancellationToken cancellationToken)
     {
-        if (!IsValid(request)) return BadRequest(new { message = "Informe descrição, data e um valor válido." });
+        if (!IsValid(request)) return BadRequest(new { message = "Informe contato, data, horário, telefone e um valor válido." });
         var item = await db.AgendaItems.FindAsync([id], cancellationToken);
         if (item is null) return NotFound();
-        item.Descricao = request.Descricao.Trim();
+        item.Contato = request.Contato.Trim();
         item.Data = request.Data;
+        item.Horario = request.Horario;
+        item.Telefone = request.Telefone.Trim();
         item.Valor = request.Valor;
         await db.SaveChangesAsync(cancellationToken);
         return Ok(item);
@@ -56,7 +65,11 @@ public sealed class AgendaController(AgendaDbContext db) : ControllerBase
     }
 
     private static bool IsValid(AgendaItemRequest request) =>
-        !string.IsNullOrWhiteSpace(request.Descricao) && request.Data != default && request.Valor >= 0;
+        !string.IsNullOrWhiteSpace(request.Contato) &&
+        !string.IsNullOrWhiteSpace(request.Telefone) &&
+        request.Data != default &&
+        request.Horario >= TimeSpan.Zero &&
+        request.Valor >= 0;
 }
 
 public sealed class AgendaPageController : Controller
