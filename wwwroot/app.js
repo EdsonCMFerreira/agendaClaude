@@ -44,10 +44,16 @@ function render() {
   }).sort((a, b) => newestFirst ? new Date(b.data) - new Date(a.data) : new Date(a.data) - new Date(b.data));
   rows.innerHTML = filtered.map(item => `<tr><td><strong>${escapeHtml(item.contato)}</strong></td><td>${date.format(new Date(item.data))}</td><td>${formatTime(item.horario)}</td><td>${escapeHtml(item.telefone)}</td><td>${money.format(item.valor)}</td><td><div class="actions"><button class="action" data-edit="${item.id}">Editar</button><button class="action delete" data-delete="${item.id}">Excluir</button></div></td></tr>`).join('');
   emptyState.classList.toggle('visible', filtered.length === 0);
-  document.querySelector('#totalCount').textContent = items.length;
-  document.querySelector('#totalValue').textContent = money.format(items.reduce((sum, item) => sum + item.valor, 0));
+  const totals = items.reduce((sum, item) => sum + item.valor, 0);
+  const totalCount = items.length;
+  document.querySelector('#totalCount').textContent = totalCount;
+  document.querySelector('#totalCountStat').textContent = totalCount;
+  document.querySelector('#totalValue').textContent = money.format(totals);
+  document.querySelector('#totalValueFeed').textContent = money.format(totals);
   const next = items.filter(item => new Date(item.data) >= new Date(new Date().setHours(0, 0, 0, 0))).sort((a, b) => new Date(a.data) - new Date(b.data))[0];
-  document.querySelector('#nextDate').textContent = next ? date.format(new Date(next.data)) : '--';
+  const nextText = next ? date.format(new Date(next.data)) : '--';
+  document.querySelector('#nextDate').textContent = nextText;
+  document.querySelector('#nextDateFeed').textContent = nextText;
   rows.querySelectorAll('[data-edit]').forEach(button => button.addEventListener('click', () => openForm(Number(button.dataset.edit))));
   rows.querySelectorAll('[data-delete]').forEach(button => button.addEventListener('click', () => deleteItem(Number(button.dataset.delete))));
 }
